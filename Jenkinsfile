@@ -1,5 +1,4 @@
 #!/usr/bin/env groovy
-@Library('jenkins-shared-library')
 def gv
 pipeline {
     agent any
@@ -19,15 +18,20 @@ pipeline {
             steps {
                 script {
                     echo "Building the jar with external groovy script..."
-                    buildJar()
+                    sh 'mvn package'
+                }
             }
         }
         stage('build image') {
             steps {
                 script {
                     echo "Building the docker image..."
-                    buildImage()
-                }
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+        sh 'docker build -t ilemona02/java-napp:jma-2.0 .'
+        sh "echo $PASS | docker login -u $USER --password-stdin"
+        sh 'docker push ilemona02/java-napp:jma-2.0'
+    }
+}
             }
         }
         stage('test') {
