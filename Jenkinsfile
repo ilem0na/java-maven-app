@@ -20,8 +20,10 @@ pipeline {
                 script {
                     echo "Building the jar with external groovy script..."
                     buildJar()
+                }
             }
         }
+
         stage('build image') {
             steps {
                 script {
