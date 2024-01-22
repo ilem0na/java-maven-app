@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     echo "Building the docker image..."
-                    buildImage()
+                    buildImage "ilemona02/my-nrepo:3.0"
                 }
             }
         }
