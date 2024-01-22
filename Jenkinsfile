@@ -42,6 +42,7 @@ pipeline {
             steps {
                 script {
                     echo "Testing the application..."
+                    echo "Testing webhook from github..."
                 }
             }
         }
@@ -49,6 +50,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying the application..."
+                    
                 }
             }
         }
