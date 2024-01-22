@@ -23,6 +23,7 @@ pipeline {
             steps {
                 script {
                     echo "Building the jar with external groovy script..."
+                    echo "building with maven"
                     buildJar()
                 }
             }
