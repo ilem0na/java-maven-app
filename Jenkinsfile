@@ -25,11 +25,13 @@ pipeline {
             }
         }
 
-        stage('build image') {
+        stage('build and push image') {
             steps {
                 script {
                     echo "Building the docker image..."
                     buildImage "ilemona02/my-nrepo:3.0"
+                    dockerLogin()
+                    dockerPush("ilemona02/my-nrepo:3.0")
                 }
             }
         }
