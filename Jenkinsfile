@@ -64,6 +64,13 @@ pipeline {
             steps {
                 script {
                     echo "Deploying the application..."
+                    def dockerCmd = "docker run -dp 8080:8080 ilemona02/my-nrepo:${IMAGE_NAME}"
+                    sshagent(['Server-key']) {
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@18.206.248.121 ${dockerCmd}"
+
+
+
+                    }
                     
                 }
             }
