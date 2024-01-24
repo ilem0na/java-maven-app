@@ -19,6 +19,20 @@ pipeline {
                 }
             }
         }
+        stage('Increment version') {
+            steps {
+                script {
+                    echo "Incrementing the version..."
+                    sh "mvn build-helper:parse-version versions:set \
+                    -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} versions:commit"
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
+                    echo "Version: ${version}"
+                    env.IMAGE_NAME = "$version-BUILD_NUMBER"
+                    
+                }
+            }
+        }
         stage('build jar') {
             steps {
                 script {
@@ -32,9 +46,9 @@ pipeline {
             steps {
                 script {
                     echo "Building the docker image..."
-                    buildImage "ilemona02/my-nrepo:3.0"
+                    buildImage "ilemona02/my-nrepo:${IMAGE_NAME} ."
                     dockerLogin()
-                    dockerPush("ilemona02/my-nrepo:3.0")
+                    dockerPush("ilemona02/my-nrepo:${IMAGE_NAME}")
                 }
             }
         }
