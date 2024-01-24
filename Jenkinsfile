@@ -71,7 +71,7 @@ pipeline {
         stage('Commit Version update') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                  withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
                     sh 'git config --global user.email "ilemonan@gmail.com"'
                     sh 'git config --global user.name "ilem0na"'
                     sh 'git status'
@@ -81,8 +81,7 @@ pipeline {
                     sh "git add ."
                     sh "git commit -m 'Increment version in pom.xml from jenkins'"
                     sh "git push origin HEAD:jenkins-shared-lib "
-                    }
-        }
+                    } 
                 }
             }
         }
