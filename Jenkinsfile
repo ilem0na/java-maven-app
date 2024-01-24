@@ -71,13 +71,13 @@ pipeline {
         stage('Commit Version update') {
             steps {
                 script {
-                  withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                    sh 'git config --global user.email "ilemonan@gmail.com"'
+                  withCredentials([string(credentialsId: 'github-AT', variable: 'TOKEN')]) {
+                    sh 'git config --global user.email "ilemona02@gmail.com"'
                     sh 'git config --global user.name "ilem0na"'
                     sh 'git status'
                     sh 'git branch'
                     sh 'git config --list'
-                    sh "git remote set-url origin https://${USER}:${PASS}@github.com/ilem0na/java-maven-app.git"
+                    sh "git remote set-url origin https://${TOKEN}@github.com/ilem0na/java-maven-app.git"
                     sh "git add ."
                     sh "git commit -m 'Increment version in pom.xml from jenkins'"
                     sh "git push origin HEAD:jenkins-shared-lib "
