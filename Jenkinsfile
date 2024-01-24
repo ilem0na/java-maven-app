@@ -28,7 +28,7 @@ pipeline {
                     def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
                     def version = matcher[0][1]
                     echo "Version: ${version}"
-                    env.IMAGE_NAME = "$version-BUILD_NUMBER"
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
                     
                 }
             }
@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     echo "Building the docker image..."
-                    buildImage "ilemona02/my-nrepo:${IMAGE_NAME} ."
+                    buildImage "ilemona02/my-nrepo:${IMAGE_NAME}"
                     dockerLogin()
                     dockerPush("ilemona02/my-nrepo:${IMAGE_NAME}")
                 }
