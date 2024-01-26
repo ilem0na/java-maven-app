@@ -60,31 +60,18 @@ pipeline {
                 }
             }
         }
-        /*
-        stage('deploy') {
-            steps {
-                script {
-                    echo "Deploying the application..."
-                    def dockerCmd = "docker run -dp 8080:8080 ilemona02/my-nrepo:${IMAGE_NAME}"
-                    def ec2Instance = "ec2-user@18.206.248.121"
-                    sshagent(['Server-key']) {
-                        sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${dockerCmd}"        
-
-                    }
-                    
-                }
-            }
-        }
-        */
+        
         stage('deploy to EKS') {
             environment {
                 AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
                 AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
+                APP_NAME = "java-eks-deployment"
             }
             steps {
                 script {
                     echo "Deploying the application to EKS..."
-                    sh "kubectl create deployment java-eks-deployment --image=ilemona02/my-nrepo:${IMAGE_NAME}"
+                    sh "envsubst < k8s/deployment.yaml | kubectl apply -f -"
+                    sh "envsubst < k8s/service.yaml | kubectl apply -f -"
                   
                 }
             }
