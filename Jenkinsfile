@@ -60,7 +60,7 @@ pipeline {
                 }
             }
         }
-        /*
+        
         stage('deploy') {
             steps {
                 script {
@@ -75,20 +75,7 @@ pipeline {
                 }
             }
         }
-        */
-        stage('deploy to EKS') {
-            environment {
-                AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
-                AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
-            }
-            steps {
-                script {
-                    echo "Deploying the application to EKS..."
-                    sh "kubectl create deployment java-eks-deployment --image=ilemona02/my-nrepo:${IMAGE_NAME}"
-                  
-                }
-            }
-        }
+    
         stage('Commit Version update') {
             steps {
                 script {
