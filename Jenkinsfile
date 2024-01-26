@@ -88,7 +88,7 @@ pipeline {
                     sh "git remote set-url origin https://${TOKEN}@github.com/ilem0na/java-maven-app.git"
                     sh "git add ."
                     sh "git commit -m 'Increment version in pom.xml from jenkins'"
-                    sh "git push origin HEAD:jenkins-shared-lib "
+                    sh "git push origin HEAD:deploy-to-EKS"
                     } 
                 }
             }
