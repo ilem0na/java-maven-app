@@ -70,8 +70,8 @@ pipeline {
             steps {
                 script {
                     echo "Deploying the application to EKS..."
-                    sh "envsubst < k8s/deployment.yaml | kubectl apply -f -"
-                    sh "envsubst < k8s/service.yaml | kubectl apply -f -"
+                    sh "envsubst < kubernetes/deployment.yaml | kubectl apply -f -"
+                    sh "envsubst < kubernetes/service.yaml | kubectl apply -f -"
                   
                 }
             }
