@@ -84,7 +84,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying the application to EKS..."
-                    sh "kubectl create deployment javaApp-deployment --image=ilemona02/my-nrepo:${IMAGE_NAME}"
+                    sh "kubectl create deployment java-eks-deployment --image=ilemona02/my-nrepo:${IMAGE_NAME}"
                   
                 }
             }
