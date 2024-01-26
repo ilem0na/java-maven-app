@@ -60,6 +60,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('deploy') {
             steps {
                 script {
@@ -74,6 +75,7 @@ pipeline {
                 }
             }
         }
+        */
         stage('deploy to EKS') {
             environment {
                 AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
