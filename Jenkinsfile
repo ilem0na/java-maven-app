@@ -54,7 +54,7 @@ pipeline {
                     buildImage "${REPO_URI}:${IMAGE_NAME}"
                     withCredentials([usernamePassword(credentialsId: 'ecr-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         echo "Logging into ECR..."
-                        sh "echo $PASS | docker login -u ${USER} -p --password-stdin ${ECR_REGISTRY}"
+                        sh "echo $PASS | docker login -u $USER --password-stdin ${ECR_REGISTRY}"
                     }
                     // dockerLogin() removed the link to JL
                     dockerPush("${REPO_URI}:${IMAGE_NAME}")
