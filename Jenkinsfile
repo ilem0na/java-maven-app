@@ -10,6 +10,10 @@ pipeline {
     tools {
         maven 'maven-3.9.6'
     }
+    enviroment {
+            ECR_REGISTRY = '788274720672.dkr.ecr.us-east-1.amazonaws.com'
+            REPO_URI = "${ECR_REGISTRY}/java-maven-app"
+            }
     stages {
         stage('init') {
             steps {
@@ -42,13 +46,18 @@ pipeline {
             }
         }
 
-        stage('build and push image') {
+        stage('build and push image to ECR') {
+           
             steps {
                 script {
                     echo "Building the docker image..."
-                    buildImage "ilemona02/my-nrepo:${IMAGE_NAME}"
-                    dockerLogin()
-                    dockerPush("ilemona02/my-nrepo:${IMAGE_NAME}")
+                    buildImage "${REPO_URI}:${IMAGE_NAME}"
+                    withCredentials([usernamePassword(credentialsId: 'ecr-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                        echo "Logging into ECR..."
+                        sh "echo $PASS | docker login -u ${USER} -p --password-stdin ${ECR_REGISTRY}"
+                    }
+                    // dockerLogin() removed the link to JL
+                    dockerPush("${REPO_URI}:${IMAGE_NAME}")
                 }
             }
         }
@@ -61,7 +70,7 @@ pipeline {
             }
         }
         
-        stage('deploy to EKS') {
+        stage('deploy to EKS from ECR image') {
             environment {
                 AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
                 AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
@@ -88,7 +97,7 @@ pipeline {
                     sh "git remote set-url origin https://${TOKEN}@github.com/ilem0na/java-maven-app.git"
                     sh "git add ."
                     sh "git commit -m 'Increment version in pom.xml from jenkins'"
-                    sh "git push origin HEAD:deploy-to-EKS"
+                    sh "git push origin HEAD:EKS-ECR-deployment"
                     } 
                 }
             }
