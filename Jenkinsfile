@@ -10,7 +10,7 @@ pipeline {
     tools {
         maven 'maven-3.9.6'
     }
-    enviroment {
+    environment {
             ECR_REGISTRY = '788274720672.dkr.ecr.us-east-1.amazonaws.com'
             REPO_URI = "${ECR_REGISTRY}/java-maven-app"
             }
