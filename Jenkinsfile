@@ -60,15 +60,41 @@ pipeline {
                 }
             }
         }
+
+        stage('Provision server for AWS') {
+            environment {
+                AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
+                AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
+                TF_VAR_env_prefix = "TEST"
+            steps{
+                script {
+                    echo "Provisioning the server..."
+                    dir('terraform') {
+                        sh 'terraform init'
+                        sh 'terraform apply -auto-approve'
+                        EC2_PUBLIC_IP = sh(script: "terraform output ec2_public_IP", returnStdout: true).trim()
+                    }
+                    
+                }
+            }
+        }
+        }
         
         stage('deploy') {
             steps {
                 script {
+                    echo "waiting for the server to be ready..."
+                    sleep(time: 90, unit: 'SECONDS')
                     echo "Deploying the application..."
+                    echo "EC2_PUBLIC_IP: ${EC2_PUBLIC_IP}"
                     def dockerCmd = "docker run -dp 8080:8080 ilemona02/my-nrepo:${IMAGE_NAME}"
-                    def ec2Instance = "ec2-user@18.206.248.121"
-                    sshagent(['Server-key']) {
-                        sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${dockerCmd}"        
+                    def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
+                    def shellCmd = "  bash ./server-cmd.sh ilemona02/my-nrepo:${IMAGE_NAME}"
+                    sshagent(['server-ssh-keys']) {
+                        sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${dockerCmd}" 
+                        sh "curl http://${EC2_PUBLIC_IP}:8080/"
+                        sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${ec2Instance}:~/ec2-user/" 
+                        sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${shellCmd}"      
 
                     }
                     
