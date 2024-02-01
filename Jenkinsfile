@@ -83,10 +83,12 @@ pipeline {
         
         
         stage('deploy') {
-            steps {
-                enviroment { 
+             
+            enviroment { 
                         DOCKER_CREDS = credentials('docker-hub-repo')
                 }
+            steps {
+               
                 script {
                     echo "waiting for the server to be ready..."
                     sleep(time: 90, unit: 'SECONDS')
