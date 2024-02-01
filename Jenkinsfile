@@ -84,8 +84,8 @@ pipeline {
         
         stage('deploy') {
              
-            enviroment { 
-                        DOCKER_CREDS = credentials('docker-hub-repo')
+            environment { 
+                    DOCKER_CREDS = credentials('docker-hub-repo')
                 }
             steps {
                
