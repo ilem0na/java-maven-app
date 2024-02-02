@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   java-maven-app:
-    image: 'ilemona02/my-nrepo:${IMAGE_NAME}'
+    image: 'ilemona02/my-nrepo:latest'
     ports:
       - 8080:8080
   postgres:

@@ -94,7 +94,7 @@ pipeline {
                     sleep(time: 20, unit: 'SECONDS')
                     echo "Deploying the application..."
                     echo "EC2_PUBLIC_IP: ${env.EC2_PUBLIC_IP}"
-                    def dockerCmd = "docker run -dp 9099:8080 ilemona02/my-nrepo:${IMAGE_NAME}"
+                    def dockerCmd = "docker run -dp 9080:8080 ilemona02/my-nrepo:${IMAGE_NAME}"
                     def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
                     def shellCmd = "  bash ./server-cmd.sh ilemona02/my-nrepo:${IMAGE_NAME} ${DOCKER_CREDS_USR} ${DOCKER_CREDS_PSW}" //possess assess to the docker_creds-usr and docker_creds_psw enviroment variables
                     sshagent(['server-ssh-keys']) {
@@ -108,7 +108,7 @@ pipeline {
                 }
             }
         }
-    
+            /*
         stage('Commit Version update') {
             steps {
                 script {
@@ -126,5 +126,7 @@ pipeline {
                 }
             }
         }
+        */
+        // left out the commit stage
     }
 }
