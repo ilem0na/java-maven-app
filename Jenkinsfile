@@ -91,15 +91,16 @@ pipeline {
                
                 script {
                     echo "waiting for the server to be ready..."
-                    sleep(time: 50, unit: 'SECONDS')
+                    sleep(time: 20, unit: 'SECONDS')
                     echo "Deploying the application..."
                     echo "EC2_PUBLIC_IP: ${env.EC2_PUBLIC_IP}"
-                    def dockerCmd = "docker run -dp 9095:8080 ilemona02/my-nrepo:${IMAGE_NAME}"
+                    def dockerCmd = "docker run -dp 9097:8080 ilemona02/my-nrepo:${IMAGE_NAME}"
                     def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
                     def shellCmd = "  bash ./server-cmd.sh ilemona02/my-nrepo:${IMAGE_NAME} ${DOCKER_CREDS_USR} ${DOCKER_CREDS_PSW}" //possess assess to the docker_creds-usr and docker_creds_psw enviroment variables
                     sshagent(['server-ssh-keys']) {
                         sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${dockerCmd}" 
                         sh "scp -o StrictHostKeyChecking=no docker-compose.yaml ${ec2Instance}:/home/ec2-user/" 
+                        sh "scp -o StrictHostKeyChecking=no server-cmd.sh ${ec2Instance}:/home/ec2-user/"
                         sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${shellCmd}"      
 
                     }
