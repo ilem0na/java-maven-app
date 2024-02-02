@@ -94,9 +94,9 @@ pipeline {
                     sleep(time: 90, unit: 'SECONDS')
                     echo "Deploying the application..."
                     echo "EC2_PUBLIC_IP: ${env.EC2_PUBLIC_IP}"
-                def dockerCmd = "docker run -dp 9090:8080 ilemona02/my-nrepo:${IMAGE_NAME} ${DOCKER_CREDS_USR} ${DOCKER_CREDS_PSW}"
+                def dockerCmd = "docker run -dp 9090:8080 ilemona02/my-nrepo:${IMAGE_NAME}"
                     def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
-                    def shellCmd = "  bash ./server-cmd.sh ilemona02/my-nrepo:${IMAGE_NAME} "
+                    def shellCmd = "  bash ./server-cmd.sh ilemona02/my-nrepo:${IMAGE_NAME} ${DOCKER_CREDS_USR} ${DOCKER_CREDS_PSW}"
                     sshagent(['server-ssh-keys']) {
                         sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${dockerCmd}" 
                         sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${ec2Instance}:~/ec2-user/" 
