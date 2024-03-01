@@ -2,17 +2,20 @@ def gv
 
 pipeline {
     agent any
+    environment {
+        ANSIBLE_SERVER = "159.223.195.227"
+    }
     stages {
         stage("copy files to ansible server") {
             steps {
                 script {
                     echo "copying all necessary files to ansible control server..."
                     sshagent(['ansible-server-key']) {
-                        sh "scp -o strictHostkeyChecking=no ansible/* root@159.223.195.227:/root"
+                        sh "scp -o strictHostkeyChecking=no ansible/* root@${ANSIBLE_SERVER}:/root"
 
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-aserver-key', keyFileVariable: 'keyfile', usernameVaraible: 'user')]) {
                         
-                        sh 'scp $keyfile root@159.223.195.227:/root/ansible_keypair.pem'
+                        sh 'scp $keyfile root@$ANSIBLE_SERVER:/root/ansible_keypair.pem'
                         }
                     }
                 }
@@ -20,23 +23,23 @@ pipeline {
         } 
 
         stage("execute ansible playbook") {
-            steps{
+            steps {
                 script {
-                    echo " calling ansible playbook to configure the web server on AWS EC2 instance"
-
+                    echo "calling ansible playbook to configure ec2 instances"
                     def remote = [:]
                     remote.name = "ansible-server"
-                    remote.host = "159.223.195.227"
+                    remote.host = ANSIBLE_SERVER
                     remote.allowAnyHosts = true
 
-                    withCredentials([sshUserPrivateKey(credentialsId: ansible-server-key, keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]){
                         remote.user = user
                         remote.identityFile = keyfile
-                        sshCommand(command: 'ls -la', remote: remote)
+                        sshCommand remote: remote, command: "ls -la"
                     }
-                    
                 }
             }
         }
+    }
+
     }
 }
