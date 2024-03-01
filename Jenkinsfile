@@ -12,7 +12,7 @@ pipeline {
 
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-aserver-key', keyFileVariable: 'keyfile', usernameVaraible: 'user')]) {
                         
-                        sh "scp ${keyfile} root@159.223.195.227:/root/ansible_keypair.pem"
+                        sh 'scp $keyfile root@159.223.195.227:/root/ansible_keypair.pem'
                         }
                     }
                 }
