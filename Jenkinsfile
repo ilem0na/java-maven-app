@@ -19,7 +19,7 @@ pipeline {
             }
         } 
 
-        stage {
+        stage("configure web server") {
             steps{
                 script {
                     echo " calling ansible playbook to configure the web server on AWS EC2 instance"
