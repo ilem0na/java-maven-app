@@ -3,7 +3,7 @@ def gv
 pipeline {
     agent any
     environment {
-        ANSIBLE_SERVER = "159.223.195.227"
+        ANSIBLE_SERVER = "143.110.212.74"
     }
     stages {
         stage("copy files to ansible server") {
@@ -15,7 +15,8 @@ pipeline {
 
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-aserver-key', keyFileVariable: 'keyfile', usernameVaraible: 'user')]) {
                         
-                        sh 'scp $keyfile root@$ANSIBLE_SERVER:/root/ssh-key.pem'
+                        sh "scp ${keyfile} root@$ANSIBLE_SERVER:/root/ssh-key.pem"
+                        sh 'chmod 600 /root/ssh-key.pem'
                         }
                     }
                 }
