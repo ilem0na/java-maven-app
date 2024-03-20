@@ -36,6 +36,7 @@ pipeline {
                         remote.user = user
                         remote.identityFile = keyfile
                         //sshCommand remote: remote, command: "chmod 744 /etc/ansible/hosts"
+                        // sshCommand remote: remote, command: "prepare-ansible.sh"
                         sshCommand remote: remote, command: "ansible-playbook my-playbook.yaml"
                     }
                 }
