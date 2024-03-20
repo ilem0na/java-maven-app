@@ -17,7 +17,7 @@ pipeline {
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-aserver-key', keyFileVariable: 'keyfile', usernameVaraible: 'user')]) {
                         
                         sh 'scp $keyfile root@$ANSIBLE_SERVER:/root/ssh-key.pem'
-                        sh 'chmod 600 /root/ssh-key.pem'
+                        sh 'chmod 600 ~/root/ssh-key.pem'
                         }
                     }
                 }
